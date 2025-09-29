@@ -12,10 +12,20 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
+    "languages": [
       {
-        "command": "xdr-ls.helloWorld",
-        "title": "Hello World"
+        "id": "xdr",
+        "extensions": [
+          ".x"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "xdr",
+        "scopeName": "source.xdr",
+        "path": "./xdr.tmGrammar.json"
       }
     ]
   },

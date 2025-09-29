@@ -1,0 +1,76 @@
+{
+  "scopeName": "source.xdr",
+  "patterns": [
+    {
+      "include": "#root"
+    }
+  ],
+  "repository": {
+    "root": {
+      "patterns": [
+        {
+          "include": "#constant"
+        },
+        {
+          "include": "#keyword"
+        },
+        {
+          "include": "#builtin"
+        },
+        {
+          "include": "#storage"
+        },
+        {
+          "include": "#comment"
+        },
+        {
+          "include": "#operator"
+        },
+        {
+            "include": "#type"
+        }
+      ]
+    },
+    "constant": {
+      "match": "\\b(?:-?[1-9][0-9]*|0x[A-Fa-f0-9]+|0[0-7]*)",
+      "name": "constant.numeric"
+    },
+    "keyword": {
+      "match": "case|default|switch",
+      "name": "keyword.control"
+    },
+    "builtin": {
+      "match": "const|namespace|opaque|typedef",
+      "name": "keyword.builtin"
+    },
+    "storage": {
+      "match": "enum|struct|union|void",
+      "name": "storage.type"
+    },
+    "operator": {
+        "match": "\\*",
+        "name": "keyword.operator"
+    },
+    "type": {
+        "match": "\\b(?:(?:unsigned )?int|(?:unsigned )?hyper|float|double|quadruple|bool|string)\\b",
+        "name": "support.type"
+    },
+    "comment": {
+      "patterns": [
+        {
+          "match": "//.*",
+          "name": "comment.line.double-slash"
+        },
+        {
+          "match": "^%[^\n]*",
+          "name": "comment.line.percentage"
+        },
+        {
+          "begin": "/\\*",
+          "end": "\\*/",
+          "name": "comment.block"
+        }
+      ]
+    }
+  }
+}
