@@ -1,26 +1,48 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+// Based on https://code.visualstudio.com/api/language-extensions/language-server-extension-guide
+import * as vscode from "vscode";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+import {
+  LanguageClient,
+  LanguageClientOptions,
+  ServerOptions,
+  TransportKind
+} from "vscode-languageclient/node";
+
+let client: LanguageClient;
+
 export function activate(context: vscode.ExtensionContext) {
+  let command = "xdr-ls";
+  let serverOptions: ServerOptions = {
+    run: { command, transport: TransportKind.stdio },
+    debug: { command, transport: TransportKind.stdio }
+  };
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "xdr-ls" is now active!');
+  if (vscode.workspace.workspaceFolders === undefined) {
+    throw Error("Workspace folders not open");
+  }
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('xdr-ls.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from xdr-ls!');
-	});
+  let clientOptions: LanguageClientOptions = {
+    documentSelector: [
+      { scheme: "file", language: "xdr" },
+      { scheme: "file", language: "cpp", pattern: "**/xdr/*.h" }
+    ],
+  };
 
-	context.subscriptions.push(disposable);
+  // Create the language client and start the client.
+  client = new LanguageClient(
+    "xdr-ls",
+    "XDR Language Server",
+    serverOptions,
+    clientOptions
+  );
+
+  // Start the client. This will also launch the server
+  client.start();
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate(): Thenable<void> | undefined {
+  if (!client) {
+    return undefined;
+  }
+  return client.stop();
+}
